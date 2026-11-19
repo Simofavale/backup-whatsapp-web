@@ -18,10 +18,12 @@
      Qui non ci sono chat ne' chiavi: la chiave e' nel link (#k=...), che il
      browser non manda mai a GitHub. */
   html, body { margin: 0; height: 100%; background: #f0f2f5; }
-  /* Spazi per la barra dell'ora e per il bordo in basso: li mette solo la
-     cornice (la pagina interna, con ?cornice=1, non ne aggiunge altri). */
-  body { box-sizing: border-box; padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom); }
+  /* Dalla Home iOS sfoca la striscia sotto la barra dell'ora (piu' alta della
+     barra): sopra il titolo lasciamo solo quella striscia, a tinta unita.
+     In basso niente bordo: la lista scorre fino in fondo allo schermo. */
+  :root { --alto: env(safe-area-inset-top); }
+  :root.home { --alto: calc(env(safe-area-inset-top) + 40px); }
+  body { box-sizing: border-box; padding-top: var(--alto); }
   iframe { display: block; width: 100%; height: 100%; border: 0; visibility: hidden; }
   iframe.pronto { visibility: visible; }
   .avvio { position: fixed; inset: 0; display: flex; flex-direction: column;
