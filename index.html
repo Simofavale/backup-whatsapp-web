@@ -19,7 +19,13 @@
      browser non manda mai a GitHub. */
   html, body { margin: 0; height: 100%; background: #f0f2f5; }
   body { padding-top: env(safe-area-inset-top); box-sizing: border-box; }
-  iframe { display: block; width: 100%; height: 100%; border: 0; }
+  iframe { display: block; width: 100%; height: 100%; border: 0; opacity: 0;
+    transition: opacity .3s; position: relative; z-index: 1; }
+  iframe.pronto { opacity: 1; }
+  .avvio { position: fixed; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px;
+    font: 15px -apple-system, sans-serif; color: #667781; }
+  .avvio img { width: 112px; border-radius: 26px; box-shadow: 0 6px 20px #0002; }
   @media (prefers-color-scheme: dark) { html, body { background: #202c33; } }
   .avviso { font: 17px -apple-system, sans-serif; padding: 40px 24px; text-align: center; color: #667781; }
   .avviso img { width: 96px; border-radius: 22px; }
@@ -38,6 +44,9 @@
     var f = document.createElement('iframe');
     f.src = APP + '?k=' + chiave;
     f.title = 'Backup WhatsApp';
+    f.onload = function () { f.classList.add('pronto'); };
+    document.body.insertAdjacentHTML('beforeend',
+      '<div class="avvio"><img src="apple-touch-icon.png" alt=""><span>Apro le chat…</span></div>');
     document.body.appendChild(f);
   } else {
     document.body.innerHTML = '<div class="avviso"><img src="apple-touch-icon.png" alt=""><p>Link non valido.</p></div>';
