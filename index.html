@@ -18,9 +18,10 @@
      Qui non ci sono chat ne' chiavi: la chiave e' nel link (#k=...), che il
      browser non manda mai a GitHub. */
   html, body { margin: 0; height: 100%; background: #f0f2f5; }
-  /* La pagina interna (web app) si occupa da sola dello spazio per la barra
-     dell'ora: qui la cornice non aggiunge niente, cosi' il titolo non scende. */
-  body { box-sizing: border-box; }
+  /* Spazi per la barra dell'ora e per il bordo in basso: li mette solo la
+     cornice (la pagina interna, con ?cornice=1, non ne aggiunge altri). */
+  body { box-sizing: border-box; padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom); }
   iframe { display: block; width: 100%; height: 100%; border: 0; visibility: hidden; }
   iframe.pronto { visibility: visible; }
   .avvio { position: fixed; inset: 0; display: flex; flex-direction: column;
@@ -47,7 +48,7 @@
   } catch (e) { /* senza memoria basta il link completo */ }
   if (chiave) {
     var f = document.createElement('iframe');
-    f.src = APP + '?k=' + chiave;
+    f.src = APP + '?k=' + chiave + '&cornice=1';
     f.title = 'Backup WhatsApp';
     f.onload = function () {
       f.classList.add('pronto');
