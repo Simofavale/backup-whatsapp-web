@@ -21,14 +21,12 @@
   /* Aperta dalla Home, iOS sfoca la parte alta dello schermo (barra dell'ora
      e un po' sotto). Lasciamo li' una fascia a tinta unita e facciamo partire
      la web app piu' in basso, cosi' il titolo resta nitido. */
-  :root { --alto: calc(env(safe-area-inset-top) + 34px); }
+  :root { --alto: env(safe-area-inset-top); }
+  :root.home { --alto: calc(env(safe-area-inset-top) + 34px); }
   body { box-sizing: border-box; padding-top: var(--alto); }
   .fascia { position: fixed; left: 0; right: 0; top: 0; height: var(--alto);
     background: inherit; z-index: 2; }
-  /* In Safari normale (non dalla Home) la sfocatura non c'e': niente fascia */
-  @media not all and (display-mode: standalone) {
-    :root { --alto: env(safe-area-inset-top); }
-  }
+
   iframe { display: block; width: 100%; height: 100%; border: 0; visibility: hidden; }
   iframe.pronto { visibility: visible; }
   .avvio { position: fixed; inset: 0; display: flex; flex-direction: column;
@@ -42,6 +40,10 @@
 </head>
 <body>
 <script>
+  // Aperta dall'icona sulla schermata Home (in Safari normale non serve)
+  if (navigator.standalone || matchMedia('(display-mode: standalone)').matches) {
+    document.documentElement.classList.add('home');
+  }
   var APP = 'https://script.google.com/macros/s/AKfycbzWBl0z6ZqpH6NsjCn3Q3q_-YiR1S4JdWWjPpi6YV6tXs47chLcnxQX3jv3h7QdiLlDqw/exec';
   var trovata = (location.hash.match(/k=([0-9a-f]{32})/) || [])[1];
   var chiave = trovata;
