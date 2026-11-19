@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Backup WA">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#f0f2f5">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icona-512.png">
@@ -18,10 +18,13 @@
      Qui non ci sono chat ne' chiavi: la chiave e' nel link (#k=...), che il
      browser non manda mai a GitHub. */
   html, body { margin: 0; height: 100%; background: #f0f2f5; }
-  body { padding-top: env(safe-area-inset-top); box-sizing: border-box; }
-  iframe { display: block; width: 100%; height: 100%; border: 0; opacity: 0;
-    transition: opacity .3s; position: relative; z-index: 1; }
-  iframe.pronto { opacity: 1; }
+  /* La web app parte SOTTO la barra dell'ora: su iOS quella zona sfoca
+     quello che ci passa sotto, quindi le lasciamo una fascia a tinta unita. */
+  body { box-sizing: border-box; padding-top: calc(env(safe-area-inset-top) + 4px); }
+  .fascia { position: fixed; left: 0; right: 0; top: 0;
+    height: calc(env(safe-area-inset-top) + 4px); background: inherit; z-index: 2; }
+  iframe { display: block; width: 100%; height: 100%; border: 0; visibility: hidden; }
+  iframe.pronto { visibility: visible; }
   .avvio { position: fixed; inset: 0; display: flex; flex-direction: column;
     align-items: center; justify-content: center; gap: 18px;
     font: 15px -apple-system, sans-serif; color: #667781; }
@@ -40,11 +43,16 @@
     if (trovata) localStorage.setItem('chiave', trovata);
     else chiave = localStorage.getItem('chiave');
   } catch (e) { /* senza memoria basta il link completo */ }
+  document.body.insertAdjacentHTML('afterbegin', '<div class="fascia"></div>');
   if (chiave) {
     var f = document.createElement('iframe');
     f.src = APP + '?k=' + chiave;
     f.title = 'Backup WhatsApp';
-    f.onload = function () { f.classList.add('pronto'); };
+    f.onload = function () {
+      f.classList.add('pronto');
+      var a = document.querySelector('.avvio');
+      if (a) a.remove();
+    };
     document.body.insertAdjacentHTML('beforeend',
       '<div class="avvio"><img src="apple-touch-icon.png" alt=""><span>Apro le chat…</span></div>');
     document.body.appendChild(f);
